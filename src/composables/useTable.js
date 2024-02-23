@@ -43,17 +43,15 @@ export function useTable(
   }
 
   const addDataDialogVisible = ref(false)
-  const dialogTitle = ref('')
+
   const isEdit = ref(false)
 
   const handleAddData = () => {
-    dialogTitle.value = '新增使用者'
     isEdit.value = false
     addDataDialogVisible.value = true
   }
 
   const handleEditData = () => {
-    dialogTitle.value = '編輯使用者'
     isEdit.value = true
     addDataDialogVisible.value = true
   }
@@ -116,7 +114,6 @@ export function useTable(
     handleSizeChange,
     handleAddData,
     addDataDialogVisible,
-    dialogTitle,
     addOrEditSure,
     handleEditData,
     handleDeleteData,

@@ -20,7 +20,6 @@ const {
   handleSizeChange,
   handleAddData,
   addDataDialogVisible,
-  dialogTitle,
   addOrEditSure,
   handleEditData,
   handleDeleteData,
@@ -33,7 +32,10 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 zhCn.el.pagination.total = '共' + `{total}` + '筆'
 zhCn.el.pagination.pagesize = '筆/頁'
 
+const dialogTitle = ref('')
+
 const addUser = () => {
+  dialogTitle.value = '新增使用者'
   userForm.value = {
     name: '',
     email: '',
@@ -43,6 +45,7 @@ const addUser = () => {
 }
 
 const editUser = (row) => {
+  dialogTitle.value = '編輯使用者'
   userForm.value = {
     id: row.id,
     name: row.name,
@@ -63,7 +66,6 @@ const deleteUser = (row) => {
   <div>
     <div class="mb-[20px] flex justify-end">
       <div class="flex items-center space-x-[12px]">
-        <!-- <el-button type="danger" @click="deleteSelectUser()">多筆刪除</el-button> -->
         <el-button type="primary" @click="addUser">新增</el-button>
       </div>
     </div>

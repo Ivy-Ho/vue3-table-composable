@@ -47,7 +47,14 @@ userRequest.interceptors.response.use(
   }
 )
 
+// users
 export const apiGetUsers = () => userRequest.get('/users')
 export const apiPostUsers = (postData) => userRequest.post('/users', postData)
 export const apiPutUsers = (id, postData) => userRequest.put(`/users/${id}`, postData)
 export const apiDeleteUsers = (id) => userRequest.delete(`/users/${id}`)
+
+// products
+export const apiGetProducts = () => userRequest.get('/products')
+export const apiPostProducts = (postData) => userRequest.post('/products', postData)
+export const apiPutProducts = (id, postData) => userRequest.put(`/products/${id}`, postData)
+export const apiDeleteProducts = (id) => userRequest.delete(`/products/${id}`)

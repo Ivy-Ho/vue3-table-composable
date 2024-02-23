@@ -3,7 +3,7 @@
     {
       "id": "ae2d",
       "name": "test1",
-      "email": "feg@gmail.com",
+      "email": "feaee@gmail.com",
       "phone": "0937801548"
     },
     {
@@ -17,6 +17,15 @@
       "name": "test3",
       "email": "yaya@gmail.com",
       "phone": "04-12345678"
+    }
+  ],
+  "products": [
+    {
+      "id": "6902",
+      "item_name": "貓罐罐",
+      "item_price": "128",
+      "item_qty": 7,
+      "has_paid": true
     }
   ]
 }
