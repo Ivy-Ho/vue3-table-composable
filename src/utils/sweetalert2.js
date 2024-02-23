@@ -1,22 +1,6 @@
 import Swal from 'sweetalert2'
 
 export const Swal2 = {
-  // confirm: function (title, callback) {
-  //   Swal.fire({
-  //     title: title,
-  //     icon: 'question',
-  //     showCancelButton: true,
-  //     confirmButtonText: '確定',
-  //     cancelButtonText: '取消',
-  //     confirmButtonColor: '#165DFF',
-  //     cancelButtonColor: '#9B9B9B',
-  //     reverseButtons: true
-  //   }).then(async (result) => {
-  //     if (result.isConfirmed && callback) {
-  //       callback()
-  //     }
-  //   })
-  // },
   showErrorMsg: function (title, text) {
     Swal.fire({
       icon: 'error',
@@ -34,14 +18,6 @@ export const Swal2 = {
       }
     })
   },
-  // showSuccessMsg: function (title) {
-  //   Swal.fire({
-  //     icon: 'success',
-  //     title: title,
-  //     showConfirmButton: false,
-  //     timer: 1500
-  //   })
-  // },
   showWaringMsg: function (title, text) {
     Swal.fire({
       title: title,

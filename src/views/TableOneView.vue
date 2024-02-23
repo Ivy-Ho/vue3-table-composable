@@ -1,64 +1,7 @@
 <script setup>
-// import { useTableStore } from '@/stores/table'
-// const tableStore = useTableStore()
-
 import { apiGetUsers, apiPostUsers, apiPutUsers, apiDeleteUsers } from '@/api'
 
-import { useCallApi } from '@/composables/useCallApi.js'
-const { callApi } = useCallApi()
-
-import { Swal2 } from '@/utils/sweetalert2.js'
-
-import { ref, computed, onMounted } from 'vue'
-
-import {} from '@/composables/table.js'
-
-// 修改分頁器文字為中文
-import { ElConfigProvider } from 'element-plus'
-import zhCn from 'element-plus/es/locale/lang/zh-cn'
-zhCn.el.pagination.total = '共' + `{total}` + '筆'
-zhCn.el.pagination.pagesize = '筆/頁'
-
-// 分頁
-const currentPage = ref(1) // 當前頁碼
-const pageSize = ref(10) // 每頁顯示的數據條數
-
-const handleSizeChange = (val) => {
-  pageSize.value = val
-}
-
-const usersDataShow = computed(() => {
-  return users_data.value.slice(
-    (currentPage.value - 1) * pageSize.value,
-    currentPage.value * pageSize.value
-  )
-})
-
-// 表格
-const selected_item = ref([])
-const handleSelectItem = (obj) => {
-  selected_item.value = obj
-}
-
-const users_data = ref([])
-
-const fetchUsersData = async () => {
-  await callApi({
-    actionFn: () => apiGetUsers(),
-    callBack: (res) => {
-      users_data.value = res.data
-    }
-  })
-}
-
-onMounted(async () => {
-  fetchUsersData()
-})
-
-// 新增、編輯對話框
-const addUserDialogVisible = ref(false)
-const dialogTitle = ref('')
-const isEdit = ref(false)
+import { ref } from 'vue'
 
 const userForm = ref({
   name: '',
@@ -66,86 +9,62 @@ const userForm = ref({
   phone: ''
 })
 
-const handleAddUser = () => {
-  dialogTitle.value = '新增使用者'
+const currentEditId = ref('')
+
+import { useTable } from '@/composables/useTable.js'
+const {
+  tableData,
+  tableDataShow,
+  currentPage,
+  pageSize,
+  handleSizeChange,
+  handleAddData,
+  addDataDialogVisible,
+  dialogTitle,
+  addOrEditSure,
+  handleEditData,
+  handleDeleteData,
+  handleSelectItem
+} = useTable(apiGetUsers, userForm, apiPostUsers, apiPutUsers, currentEditId, apiDeleteUsers)
+
+// 修改分頁器文字為中文
+import { ElConfigProvider } from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+zhCn.el.pagination.total = '共' + `{total}` + '筆'
+zhCn.el.pagination.pagesize = '筆/頁'
+
+const addUser = () => {
   userForm.value = {
     name: '',
     email: '',
     phone: ''
   }
-  isEdit.value = false
-  addUserDialogVisible.value = true
+  handleAddData()
 }
 
-const handleEditUser = (row) => {
-  dialogTitle.value = '編輯使用者'
+const editUser = (row) => {
   userForm.value = {
     id: row.id,
     name: row.name,
     email: row.email,
     phone: row.phone
   }
-  isEdit.value = true
-  addUserDialogVisible.value = true
+  currentEditId.value = row.id
+  handleEditData()
 }
 
-const postUserData = async (postData) => {
-  await callApi({
-    actionFn: () => apiPostUsers(postData),
-    callBack: () => {
-      fetchUsersData()
-      addUserDialogVisible.value = false
-    }
-  })
-}
-
-const putUserData = async (id, postData) => {
-  await callApi({
-    actionFn: () => apiPutUsers(id, postData),
-    callBack: () => {
-      fetchUsersData()
-      addUserDialogVisible.value = false
-    }
-  })
-}
-
-const addOrEditSure = () => {
-  const postData = { ...userForm.value }
-  console.log(postData)
-  if (isEdit.value) {
-    putUserData(userForm.value.id, postData)
-  } else {
-    postUserData(postData)
-  }
-}
-
-// 刪除
-const handleDeleteUser = (row) => {
-  const fn = () => {
-    deleteUserData(row.id)
-  }
-  Swal2.showWaringConfirmMsg('刪除', '是否確定刪除此項目?', '刪除', fn)
-}
-
-const deleteUserData = async (id) => {
-  await callApi({
-    actionFn: () => apiDeleteUsers(id),
-    callBack: () => {
-      fetchUsersData()
-    }
-  })
+const deleteUser = (row) => {
+  currentEditId.value = row.id
+  handleDeleteData()
 }
 </script>
 
 <template>
   <div>
     <div class="mb-[20px] flex justify-end">
-      <!--按鈕-->
       <div class="flex items-center space-x-[12px]">
-        <!-- <el-button type="info" plain @click="deleteSelectEui()">批次刪除</el-button>
-        <el-button type="info" plain @click="exportData()">匯出</el-button>
-        <el-button type="info" plain @click="dialogImportVisible = true">匯入</el-button> -->
-        <el-button type="primary" @click="handleAddUser">新增</el-button>
+        <!-- <el-button type="danger" @click="deleteSelectUser()">多筆刪除</el-button> -->
+        <el-button type="primary" @click="addUser">新增</el-button>
       </div>
     </div>
 
@@ -153,7 +72,7 @@ const deleteUserData = async (id) => {
     <el-table
       class="w-full"
       ref="multipleTable"
-      :data="usersDataShow"
+      :data="tableDataShow"
       border
       style="width: 100%"
       @selection-change="handleSelectItem"
@@ -167,11 +86,22 @@ const deleteUserData = async (id) => {
       <el-table-column align="center" label="操作" :width="120">
         <template v-slot="scope">
           <div class="flex justify-center space-x-[5px]">
-            <el-link :underline="false" type="danger" @click="handleDeleteUser(scope.row)">
+            <el-button
+              size="small"
+              plain
+              :underline="false"
+              type="danger"
+              @click="deleteUser(scope.row)"
+            >
               刪除
-            </el-link>
-            <el-link :underline="false" type="primary" @click="handleEditUser(scope.row)"
-              >編輯</el-link
+            </el-button>
+            <el-button
+              size="small"
+              plain
+              :underline="false"
+              type="primary"
+              @click="editUser(scope.row)"
+              >編輯</el-button
             >
           </div>
         </template>
@@ -188,14 +118,14 @@ const deleteUserData = async (id) => {
           v-model:current-page="currentPage"
           v-model::page-size="pageSize"
           :page-sizes="[10, 20]"
-          :total="users_data.length"
+          :total="tableData.length"
         >
         </el-pagination>
       </el-config-provider>
     </div>
 
     <!-- 新增對話框 -->
-    <el-dialog v-model="addUserDialogVisible" :title="dialogTitle" width="500">
+    <el-dialog v-model="addDataDialogVisible" :title="dialogTitle" width="500">
       <span>
         <el-form :model="userForm" label-width="80" class="demo-form-inline">
           <el-form-item label="姓名">
@@ -211,8 +141,8 @@ const deleteUserData = async (id) => {
       </span>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="addUserDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="addOrEditSure">確認</el-button>
+          <el-button @click="addDataDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="addOrEditSure()">確認</el-button>
         </div>
       </template>
     </el-dialog>
