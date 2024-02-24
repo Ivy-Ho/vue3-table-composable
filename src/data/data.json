@@ -2,21 +2,21 @@
   "users": [
     {
       "id": "ae2d",
-      "name": "test1",
-      "email": "feaee@gmail.com",
-      "phone": "0937801548"
+      "name": "user1",
+      "email": "user1@gmail.com",
+      "phone": "0912345678"
     },
     {
       "id": "bc26",
-      "name": "test2",
-      "email": "ggg@gmail.com",
+      "name": "user2",
+      "email": "user2@gmail.com",
       "phone": "04-12345678"
     },
     {
       "id": "50a7",
-      "name": "test3",
-      "email": "yaya@gmail.com",
-      "phone": "04-12345678"
+      "name": "user3",
+      "email": "user3@gmail.com",
+      "phone": "04-23657896"
     }
   ],
   "products": [
@@ -26,6 +26,13 @@
       "item_price": "128",
       "item_qty": 7,
       "has_paid": true
+    },
+    {
+      "id": "0be2",
+      "item_name": "貓跳台",
+      "item_price": 5000,
+      "item_qty": 1,
+      "has_paid": false
     }
   ]
 }

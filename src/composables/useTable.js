@@ -59,6 +59,7 @@ export function useTable(
   const postTableData = async (postData) => {
     await callApi({
       actionFn: () => apiPostData(postData),
+      msg: { success: 'Update Successful！', failed: 'Update Failed！' },
       callBack: () => {
         fetchTableData()
         addDataDialogVisible.value = false
@@ -69,6 +70,7 @@ export function useTable(
   const putTableData = async (postData) => {
     await callApi({
       actionFn: () => apiPutTableData(currentEditId.value, postData),
+      msg: { success: 'Update Successful！', failed: 'Update Failed！' },
       callBack: () => {
         fetchTableData()
         addDataDialogVisible.value = false
@@ -88,6 +90,7 @@ export function useTable(
   const deleteTableData = async () => {
     await callApi({
       actionFn: () => apiDeleteTableData(currentEditId.value),
+      msg: { success: 'Delete Successful！', failed: 'Delete Failed！' },
       callBack: () => {
         fetchTableData()
       }
@@ -98,12 +101,7 @@ export function useTable(
     const fn = () => {
       deleteTableData()
     }
-    Swal2.showWaringConfirmMsg('刪除', '是否確定刪除此項目?', '刪除', fn)
-  }
-
-  const selected_item = ref([])
-  const handleSelectItem = (obj) => {
-    selected_item.value = obj
+    Swal2.showWaringConfirmMsg('Delete', 'Are you sure you want to delete this item?', 'Delete', fn)
   }
 
   return {
@@ -116,7 +114,6 @@ export function useTable(
     addDataDialogVisible,
     addOrEditSure,
     handleEditData,
-    handleDeleteData,
-    handleSelectItem
+    handleDeleteData
   }
 }

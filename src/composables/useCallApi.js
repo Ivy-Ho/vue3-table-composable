@@ -1,12 +1,13 @@
 import to from 'await-to-js'
 import { ElMessage } from 'element-plus'
 
-// 使用方式:
+// Usage:
+
 // import { useCallApi } from '@/composables/useCallApi.js'
 // const { callApi } = useCallApi()
 // await callApi({
 //   actionFn: () => apiPostElectricBillImport(formData),
-//   msg: { success: '更新成功！', failed: '更新失敗！' },
+//   msg: { success: 'Update Successful！', failed: 'Update Failed！' },
 //   callBack: (res) => {
 //     billsData.value = res.data
 //   }

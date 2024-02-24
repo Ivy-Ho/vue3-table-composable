@@ -23,8 +23,7 @@ const {
   addDataDialogVisible,
   addOrEditSure,
   handleEditData,
-  handleDeleteData,
-  handleSelectItem
+  handleDeleteData
 } = useTable(
   apiGetProducts,
   productForm,
@@ -34,16 +33,10 @@ const {
   apiDeleteProducts
 )
 
-// 修改分頁器文字為中文
-import { ElConfigProvider } from 'element-plus'
-import zhCn from 'element-plus/es/locale/lang/zh-cn'
-zhCn.el.pagination.total = '共' + `{total}` + '筆'
-zhCn.el.pagination.pagesize = '筆/頁'
-
 const dialogTitle = ref('')
 
 const addUser = () => {
-  dialogTitle.value = '新增商品'
+  dialogTitle.value = 'Add Product'
   productForm.value = {
     item_name: '',
     item_price: 0,
@@ -54,7 +47,7 @@ const addUser = () => {
 }
 
 const editUser = (row) => {
-  dialogTitle.value = '編輯商品'
+  dialogTitle.value = 'Edit Product'
   productForm.value = {
     id: row.id,
     item_name: row.item_name,
@@ -75,39 +68,38 @@ const deleteProduct = (row) => {
 </script>
 
 <template>
-  <div>
+  <div class="p-10">
     <div class="mb-[20px] flex justify-end">
       <div class="flex items-center space-x-[12px]">
-        <el-button type="primary" @click="addUser">新增</el-button>
+        <el-button type="primary" @click="addUser">Add</el-button>
       </div>
     </div>
 
     <!--表格-->
-    <el-table
-      class="w-full"
-      ref="multipleTable"
-      :data="tableDataShow"
-      border
-      style="width: 100%"
-      @selection-change="handleSelectItem"
-    >
-      <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="item_name" label="商品名稱" />
-      <el-table-column prop="item_price" label="商品價格">
-        <template #default="scope"> ${{ scope.row.item_price }} </template>
-      </el-table-column>
-      <el-table-column prop="item_qty" label="商品數量" />
-      <el-table-column label="總金額">
-        <template #default="scope"> ${{ scope.row.item_price * scope.row.item_qty }} </template>
-      </el-table-column>
-      <el-table-column prop="has_paid" label="付款狀態">
+    <el-table class="w-full" ref="multipleTable" :data="tableDataShow" border style="width: 100%">
+      <el-table-column prop="item_name" align="center" label="Product Name" />
+      <el-table-column prop="item_price" align="center" label="Product Price">
         <template #default="scope">
-          {{ scope.row.has_paid ? '已付款' : '未付款' }}
+          <p class="text-right">${{ scope.row.item_price.toLocaleString() }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="item_qty" align="center" width="180" label="Product Quantity" />
+      <el-table-column label="Total" align="center">
+        <template #default="scope">
+          <p class="text-right">
+            ${{ (scope.row.item_price * scope.row.item_qty).toLocaleString() }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="has_paid" align="center" label="Status">
+        <template #default="scope">
+          <p v-if="scope.row.has_paid" class="text-green-400">Paid</p>
+          <p v-else class="text-red-400">Unpaid</p>
         </template>
       </el-table-column>
 
-      <!-- 操作 -->
-      <el-table-column align="center" label="操作" :width="120">
+      <!-- operate -->
+      <el-table-column align="center" label="Operate" :width="160">
         <template v-slot="scope">
           <div class="flex justify-center space-x-[5px]">
             <el-button
@@ -117,7 +109,7 @@ const deleteProduct = (row) => {
               type="danger"
               @click="deleteProduct(scope.row)"
             >
-              刪除
+              Delete
             </el-button>
             <el-button
               size="small"
@@ -125,60 +117,53 @@ const deleteProduct = (row) => {
               :underline="false"
               type="primary"
               @click="editUser(scope.row)"
-              >編輯</el-button
+              >Edit</el-button
             >
           </div>
         </template>
       </el-table-column>
     </el-table>
 
-    <!--分頁器-->
+    <!--pagination-->
     <div class="mt-[20px] flex items-center justify-end space-x-[15px]">
-      <el-config-provider :locale="zhCn">
-        <el-pagination
-          background
-          layout="total, sizes, prev, pager, next"
-          @size-change="handleSizeChange"
-          v-model:current-page="currentPage"
-          v-model::page-size="pageSize"
-          :page-sizes="[10, 20]"
-          :total="tableData.length"
-        >
-        </el-pagination>
-      </el-config-provider>
+      <el-pagination
+        background
+        layout="total, sizes, prev, pager, next"
+        @size-change="handleSizeChange"
+        v-model:current-page="currentPage"
+        v-model::page-size="pageSize"
+        :page-sizes="[10, 20]"
+        :total="tableData.length"
+      >
+      </el-pagination>
     </div>
 
-    <!-- 新增對話框 -->
+    <!-- dialog -->
     <el-dialog v-model="addDataDialogVisible" :title="dialogTitle" width="500">
       <span>
-        <el-form :model="productForm" label-width="80" class="demo-form-inline">
-          <el-form-item label="商品名稱">
-            <el-input v-model="productForm.item_name" placeholder="請輸入內容" clearable />
+        <el-form :model="productForm" label-width="150" class="demo-form-inline">
+          <el-form-item label="Product Name">
+            <el-input v-model="productForm.item_name" placeholder="Please input" clearable />
           </el-form-item>
-          <el-form-item label="商品價格">
-            <!-- <el-input v-model="productForm.item_price" placeholder="請輸入內容" clearable /> -->
+          <el-form-item label="Product Price">
             <el-input-number v-model="productForm.item_price" :min="0" />
           </el-form-item>
-          <el-form-item label="商品數量">
-            <!-- <el-input v-model="productForm.item_qty" placeholder="請輸入內容" clearable /> -->
+          <el-form-item label="Product Quantity">
             <el-input-number v-model="productForm.item_qty" :min="1" />
           </el-form-item>
-          <el-form-item label="總金額">
-            <!-- <el-input disabled v-model="totalInDialog" clearable /> -->
-            ${{ totalInDialog }}
-          </el-form-item>
-          <el-form-item label="付款狀態">
+          <el-form-item label="Total"> ${{ totalInDialog }} </el-form-item>
+          <el-form-item label="Status">
             <el-radio-group v-model="productForm.has_paid" class="ml-4">
-              <el-radio :label="true">已付款</el-radio>
-              <el-radio :label="false">未付款</el-radio>
+              <el-radio :label="true">Paid</el-radio>
+              <el-radio :label="false">Unpaid</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-form>
       </span>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="addDataDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="addOrEditSure()">確認</el-button>
+          <el-button @click="addDataDialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="addOrEditSure()">Confirm</el-button>
         </div>
       </template>
     </el-dialog>

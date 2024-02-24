@@ -4,14 +4,14 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/tableOne',
-      name: 'table_one',
-      component: () => import('@/views/TableOneView.vue')
+      path: '/user_table',
+      name: 'user_table',
+      component: () => import('@/views/UserTableView.vue')
     },
     {
-      path: '/tableTwo',
-      name: 'table_two',
-      component: () => import('@/views/TableTwoView.vue')
+      path: '/product_table',
+      name: 'product_table',
+      component: () => import('@/views/ProductTableView.vue')
     }
   ]
 })

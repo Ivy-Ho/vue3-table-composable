@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
+import 'element-plus/theme-chalk/src/message.scss'
+
 import '@/assets/style/style.css'
 
 import App from './App.vue'
