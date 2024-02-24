@@ -69,7 +69,7 @@ const deleteUser = (row) => {
     <el-table class="w-full" ref="multipleTable" :data="tableDataShow" border style="width: 100%">
       <el-table-column align="center" prop="name" label="User Name" />
       <el-table-column align="center" prop="email" label="User Email" />
-      <el-table-column align="center" prop="phone" label="User Tel" />
+      <el-table-column align="center" prop="phone" label="User Phone Number" />
 
       <!-- operate -->
       <el-table-column align="center" label="Operate" :width="160">
@@ -121,7 +121,7 @@ const deleteUser = (row) => {
           <el-form-item label="User Email">
             <el-input v-model="userForm.email" placeholder="Please input" clearable />
           </el-form-item>
-          <el-form-item label="User Tel">
+          <el-form-item label="User Phone Number">
             <el-input v-model="userForm.phone" placeholder="Please input" clearable />
           </el-form-item>
         </el-form>
