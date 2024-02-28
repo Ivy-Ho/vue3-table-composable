@@ -4,11 +4,7 @@ import { useTableStore } from '@/stores/table'
 import { Swal2 } from '@/utils/sweetalert2.js'
 
 const userRequest = axios.create({
-  baseURL: 'http://localhost:3000',
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8',
-    Accept: 'application/json'
-  }
+  baseURL: 'http://localhost:3000'
 })
 
 userRequest.interceptors.request.use((config) => {
